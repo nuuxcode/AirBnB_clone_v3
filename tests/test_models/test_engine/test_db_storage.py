@@ -70,6 +70,7 @@ test_db_storage.py'])
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""
+
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_returns_dict(self):
         """Test that all returns a dictionaty"""
@@ -86,3 +87,51 @@ class TestFileStorage(unittest.TestCase):
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
         """Test that save properly saves objects to file.json"""
+
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_get(self):
+        """Test get"""
+        state1 = State(name="state1")
+        state2 = State(name="state2")
+        state3 = State(name="state3")
+        models.storage.new(state1)
+        models.storage.new(state2)
+        models.storage.new(state3)
+        models.storage.save()
+        models.storage.close()
+        first_state = list(models.storage.all().values())[2]
+        first_state_id = first_state.id
+        get = models.storage.get(State, first_state_id)
+        self.assertEqual(get.id, first_state_id)
+        models.storage.delete(get)
+        models.storage.save()
+        models.storage.close()
+        get = models.storage.get(State, first_state_id)
+        self.assertEqual(get, None)
+
+
+class TestFileStorage2(unittest.TestCase):
+    """Test get"""
+    @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
+    def test_count(self):
+        """Test get"""
+        state1 = State(name="state1")
+        state2 = State(name="state2")
+        state3 = State(name="state3")
+        city1 = City(state_id=state1.id, name="San Francisco")
+        city2 = City(state_id=state2.id, name="San Francisco2")
+        city3 = City(state_id=state3.id, name="San Francisco3")
+        models.storage.new(state1)
+        models.storage.new(state2)
+        models.storage.new(state3)
+        models.storage.new(city1)
+        models.storage.new(city2)
+        models.storage.new(city3)
+        models.storage.save()
+        models.storage.close()
+        total = len(models.storage.all())
+        total_state = len(models.storage.all(State))
+        count_total = models.storage.count()
+        count_state = models.storage.count(State)
+        self.assertEqual(total, count_total)
+        self.assertEqual(total_state, count_state)
