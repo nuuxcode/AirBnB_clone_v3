@@ -18,7 +18,8 @@ def page_not_found(e):
 
 @app.errorhandler(400)
 def page_not_found(e):
-    return {"error": "Not a JSON"}, 400
+    message = e.description
+    return {"error": message}, 400
 
 
 @app.teardown_appcontext
