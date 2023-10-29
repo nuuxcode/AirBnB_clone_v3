@@ -42,14 +42,10 @@ def states_delete(state_id):
 @app_views.route("/states", strict_slashes=False,
                  methods=["POST"])
 def create_state():
+    """create a new post req"""
     data = request.get_json()
-    print(data)
-
     if data is None:
         abort(400)
     new_state = State(**data)
     new_state.save()
-    return new_state, 201
-
-
-# curl -X POST http://0.0.0.0:5000/api/v1/states/ -H "Content-Type: application/json" -d '{"name": "nuux"}' -vvv
+    return new_state.to_dict(), 201
