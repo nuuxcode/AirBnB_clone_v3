@@ -19,7 +19,7 @@ def page_not_found(e):
 @app.errorhandler(400)
 def page_not_found(e):
     message = e.description
-    return {"error": message}, 400
+    return message, 400
 
 
 @app.teardown_appcontext
