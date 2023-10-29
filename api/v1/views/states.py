@@ -5,12 +5,35 @@
 from api.v1.views import app_views
 from models import storage
 from models.state import State
+from flask import abort
 
 
 @app_views.route("/states", strict_slashes=False, methods=["GET"])
-def states():
-    all_objs = storage.all(State).values()
+@app_views.route("/states/<state_id>", strict_slashes=False, methods=["GET"])
+def states(state_id=None):
     states_list = []
-    for v in all_objs:
-        states_list.append(v.to_dict())
-    return states_list
+    if state_id is None:
+        all_objs = storage.all(State).values()
+        for v in all_objs:
+            states_list.append(v.to_dict())
+        return states_list
+    else:
+        result = storage.get(State, state_id)
+        if result is None:
+            abort(404)
+        return result.to_dict()
+
+
+@app_views.route("/states/<state_id>", strict_slashes=False,
+                 methods=["DELETE"])
+def states_delete(state_id):
+    obj = storage.get(State, state_id)
+    print(obj)
+    if obj is None:
+        abort(404)
+    storage.delete(obj)
+    storage.save()
+    if storage.get(State, state_id) is None:
+        return {}, 200
+    else:
+        return "Delete fail"
