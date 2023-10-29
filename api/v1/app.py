@@ -16,6 +16,11 @@ def page_not_found(e):
     return {"error": "Not found"}, 404
 
 
+@app.errorhandler(400)
+def page_not_found(e):
+    return {"error": "Not a JSON"}, 400
+
+
 @app.teardown_appcontext
 def close(ctx):
     storage.close()

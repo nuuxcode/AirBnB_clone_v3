@@ -5,7 +5,7 @@
 from api.v1.views import app_views
 from models import storage
 from models.state import State
-from flask import abort
+from flask import abort, request
 
 
 @app_views.route("/states", strict_slashes=False, methods=["GET"])
@@ -37,3 +37,19 @@ def states_delete(state_id):
         return {}, 200
     else:
         return "Delete fail"
+
+
+@app_views.route("/states", strict_slashes=False,
+                 methods=["POST"])
+def create_state():
+    data = request.get_json()
+    print(data)
+
+    if data is None:
+        abort(400)
+    new_state = State(**data)
+    new_state.save()
+    return new_state, 201
+
+
+# curl -X POST http://0.0.0.0:5000/api/v1/states/ -H "Content-Type: application/json" -d '{"name": "nuux"}' -vvv
