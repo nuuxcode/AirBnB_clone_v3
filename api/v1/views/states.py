@@ -41,7 +41,7 @@ def states_delete(state_id):
                  methods=["POST"])
 def create_state():
     """create a new post req"""
-    data = request.get_json()
+    data = request.get_json(force = True, silent = True)
     if not data:
         abort(400, "Not a JSON")
     if 'name' not in data:
@@ -58,7 +58,7 @@ def update_state(state_id):
     obj = storage.get(State, state_id)
     if obj is None:
         abort(404)
-    data = request.get_json()
+    data = request.get_json(force = True, silent = True)
     if not data:
         abort(400, "Not a JSON")
     obj.name = data.get("name", obj.name)
