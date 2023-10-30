@@ -54,8 +54,7 @@ def create_city(state_id):
         abort(400, "Not a JSON")
     if "name" not in data:
         abort(400, "Missing name")
-    state_id = {"state_id": state.id}
-    new_state = City(**data, **state_id)
+    new_state = City(state_id=state.id, **data)
     new_state.save()
     return jsonify(new_state.to_dict()), 201
 
