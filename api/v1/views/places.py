@@ -32,7 +32,8 @@ def place_id(place_id):
     return jsonify(place.to_dict())
 
 
-@app_views.route("/places/<place_id>", strict_slashes=False, methods=["DELETE"])
+@app_views.route("/places/<place_id>", strict_slashes=False,
+                 methods=["DELETE"])
 def place_delete(place_id):
     """delete method"""
     obj = storage.get(Place, place_id)
@@ -75,9 +76,12 @@ def update_placey(place_id):
     if not data:
         abort(400, "Not a JSON")
     place.name = data.get("name", place.name)
-    place.description = data.get("description", place.description)
-    place.number_rooms = data.get("number_rooms", place.number_rooms)
-    place.number_bathrooms = data.get("number_bathrooms", place.number_bathrooms)
+    place.description = data.get("description",
+                                 place.description)
+    place.number_rooms = data.get("number_rooms",
+                                  place.number_rooms)
+    place.number_bathrooms = data.get("number_bathrooms",
+                                      place.number_bathrooms)
     place.max_guest = data.get("max_guest", place.max_guest)
     place.price_by_night = data.get("price_by_night", place.price_by_night)
     place.latitude = data.get("latitude", place.latitude)
